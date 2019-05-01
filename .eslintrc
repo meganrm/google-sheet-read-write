@@ -4,15 +4,8 @@
     "req": true,
     "res": true,
     "next": true,
-    "moment": true,
-    "expect": true,
-    "TownHall": true,
-    "Moc": true,
-    "firebase": true,
-    "Handlebars": true,
-    "$": true,
-    "statesAb": true,
-  },
+    "expect": true
+    },
   "env": {
     "es6": true,
     "node": true,
