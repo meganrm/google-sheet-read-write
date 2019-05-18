@@ -1,8 +1,22 @@
-const moment = require('moment');
-
 class Page {
     static makeContent(preFix, row) {
-        
+        if (row[`${preFix}-type`] && (row[`${preFix}-text`] || row[`${preFix}-mediaId`])) {
+            const newContent = {
+                type: row[`${preFix}-type`],
+                transition: row[`${preFix}-transition`],
+            };
+            if (newContent.type == 'text') {
+                newContent.text = row[`${preFix}-text`].trim();
+                newContent.element = row[`${preFix}-element`];
+            } else if (newContent.type == 'media' && row[`${preFix}-mediaId`]) {
+                newContent.mediaId = row[`${preFix}-mediaId`];
+                newContent.element = row[`${preFix}-element`];
+                if (row[`${preFix}-caption`]) {
+                    newContent.caption = row[`${preFix}-caption`];
+                }
+            }
+            return newContent;
+        }
     }
 
     constructor(row, index) {
@@ -25,32 +39,14 @@ class Page {
             },
   
         ];
-        if (row['body-2-type'] && (row['body-2-text'] | row['body-3-mediaId'])) {
-            const newContent = {
-                type: row['body-2-type'],
-                transition: row['body-2-transition'],
-            };
-            if (newContent.type == 'text') {
-                newContent.text = row['body-2-text'].trim();
-                newContent.element = row['body-2-element'];
-            } else if (newContent.type == 'media' && row['body-3-mediaId']) {
-                newContent.mediaId = row['body-3-mediaId'];
-                newContent.element = row['body-2-element'];
-                newContent.marker = 'whole-movie';
-                if (row['body-2-caption']) {
-                    newContent.caption = row['body-2-caption'];
-                }
-            }
+        if (row['body-2-type'] && (row['body-2-text'] || row['body-2-mediaId'])) {
+            const newContent = Page.makeContent('body-2', row);
             content.push(newContent);
         }
-        if (row['body-3-type']) {
-            content.push({
-                text: row['body-3-text'],
-                transition: row['body-3-transition'],
-                element: row['body-3-element'],
-                type: row['body-3-type'],
+        if (row['body-3-type'] && (row['body-3-text'] || row['body-3-mediaId'])) {
+            const newContent = Page.makeContent('body-3', row);
 
-            });
+            content.push(newContent);
         }
         this.body = {
             transition: row['body-transition'],
